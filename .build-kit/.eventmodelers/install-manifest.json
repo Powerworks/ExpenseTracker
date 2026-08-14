@@ -1,0 +1,16 @@
+{
+  "stack": "cratis-csharp",
+  "global": false,
+  "skills": [
+    "connect",
+    "learn-eventmodelers-api",
+    "load-slice",
+    "update-slice-status",
+    "_shared",
+    "build-automation",
+    "build-state-change",
+    "build-state-view"
+  ],
+  "claudeExtras": [],
+  "mcpRegistered": false
+}

@@ -1,0 +1,25 @@
+# eventmodelers
+**/.eventmodelers/config.json
+.slices/
+tasks.json
+progress.txt
+slice-timings.jsonl
+ralph-*.log
+**/.progress.md
+**/.ralph-state.json
+
+# .NET
+bin/
+obj/
+*.user
+*.suo
+[Ll]og/
+
+# Node / React / React Native
+node_modules/
+dist/
+build/
+.expo/
+*.tsbuildinfo
+npm-debug.log*
+.claude/settings.local.json
