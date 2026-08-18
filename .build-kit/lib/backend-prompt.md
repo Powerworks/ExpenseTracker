@@ -60,12 +60,50 @@ implementing.
     - Test (slice only): `dotnet test --filter "FullyQualifiedName~<SliceName>"`
     If the slice is UI-triggered, also implement the React component(s) AFTER the build generated the
     proxies, then register them in the feature's composition page.
-14. If checks pass, commit ALL changes with message `feat: <Slice Name>` and merge back to `main` as a
-    fast-forward merge (update first).
-15. Set `status: Done` for the slice in `index.json` **and** on the board via `update-slice-status`.
-16. Append progress to `progress.txt` after each step.
-17. Append new reusable learnings to `AGENT.md` in compressed form (only if not already there).
-18. Finish the iteration.
+14. **Pre-commit self-verification** (before claiming the slice is done — adapted from Ralph
+    Specum's spec-executor self-check):
+    - Re-read `slice.json` and confirm every command, event, field, and specification on it has an
+      executable equivalent in code — no invented fields, nothing silently dropped.
+    - Confirm `dotnet build` and the slice's `dotnet test` filter both passed on this exact commit,
+      not an earlier one.
+    - Do not describe the slice as done while also noting an unresolved gap ("requires manual
+      follow-up", "couldn't fully implement X", "needs human review of Y") — if such a gap exists,
+      the slice is **not** done: keep working it in this same iteration, or if genuinely blocked, set
+      its status to `Blocked` (not `Done`) and record the blocker in `progress.txt`. Never emit a
+      completion signal alongside an admitted gap.
+15. **Slice review** (adapted from Ralph Specum's artifact-review layer — runs every iteration, since
+    each iteration is already scoped to exactly one slice rather than a batch of tasks): before
+    committing, dispatch an independent review via the `Agent` tool (a fresh `general-purpose`
+    subagent, no shared context) with: the full contents of `slice.json`, the diff of files changed
+    this iteration (`git diff --stat`), and `.build-kit/.claude/skills/_shared/cratis-conventions.md`.
+    Ask it to check the implementation against the slice definition and the Cratis non-negotiables,
+    and to answer only `REVIEW_PASS` or `REVIEW_FAIL: <specific, file-and-line feedback>`.
+    - `REVIEW_PASS` → proceed to commit.
+    - `REVIEW_FAIL` → fix the specific issues raised, re-run the quality checks in step 13, then
+      re-review. Cap at 3 review rounds; if still failing after 3, commit anyway but set the slice's
+      status to `Blocked` (not `Done`) and record the outstanding findings verbatim in `progress.txt`
+      rather than silently shipping a known-broken slice as complete.
+    - Reviewer errored or gave no parseable signal → treat as `REVIEW_PASS` (permissive) and note
+      "REVIEW_PASS (no signal)" in `progress.txt`.
+16. **Commit** (one slice = one commit — adapted from Ralph Specum's commit discipline):
+    - Use a conventional-commit prefix: `feat(<slice-scope>): <Slice Name>` for a new slice,
+      `fix(<slice-scope>): <Slice Name>` if this iteration is fixing specs on an already-existing
+      slice per step 9's "added specifications" case.
+    - Stage and commit the implementation files **together with** `progress.txt`, `AGENT.md`, and the
+      slice's `index.json` status update in the same commit — never leave tracking files uncommitted
+      alongside their code.
+    - Never commit failing code — if step 13's checks or step 15's review didn't pass (and step 14
+      didn't route the slice to `Blocked`), do not commit.
+    - **Never push directly to `main`.** Push the `feature/<slicename>` branch only
+      (`git push -u origin feature/<slicename>`). Leave the merge to `main` as a separate,
+      human-reviewed step — do not fast-forward-merge in this loop. If you find yourself already on
+      `main` mid-iteration, stop and record it in `progress.txt` as a blocker rather than committing
+      there.
+17. Set `status: Done` (or `Blocked`, per steps 14/15) for the slice in `index.json` **and** on the
+    board via `update-slice-status`.
+18. Append progress to `progress.txt` after each step.
+19. Append new reusable learnings to `AGENT.md` in compressed form (only if not already there).
+20. Finish the iteration.
 
 ## Sequencing (Cratis-specific)
 
@@ -117,7 +155,10 @@ cannot execute.
 **After completing ONE slice, always stop** — the ralph loop will invoke you again for the next slice.
 Never chain multiple slices in one iteration.
 
-- Slice completed and committed → reply `<promise>DONE</promise>`
+- Slice completed, reviewed (step 15), and committed → reply `<promise>DONE</promise>`
+- Slice committed but review/verification didn't clear within 3 rounds, or otherwise genuinely
+  blocked (see steps 14/15) → reply `<promise>BLOCKED</promise>` and leave `progress.txt`'s
+  findings as the record of why
 - No slice has status "Planned" → reply `<promise>NO_TASKS</promise>`
 - ALL slices across the index are Done → reply `<promise>COMPLETE</promise>`
 
