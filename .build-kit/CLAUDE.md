@@ -1,8 +1,21 @@
 # CratisApp — agent conventions
 
-This is a **Cratis** application: Cratis Arc (CQRS) + Cratis Chronicle (event sourcing) + MongoDB read
-models on the backend, React + TypeScript (Vite + PrimeReact) on the frontend, with **full-stack type
-safety** via TypeScript proxy generation on `dotnet build`.
+This is a **mixed-persistence** application, not a pure Cratis app: most of it is plain CRUD via
+**EF Core + Postgres**; **Cratis** (Arc CQRS + Chronicle event sourcing + MongoDB read models) is
+reserved for the subset of slices that are genuinely event-sourced — a real state machine worth an
+audit trail (the `Expenses` approval workflow is the model case: `PendingApproval → Approved/Rejected
+→ PayoutRequested → Paid` with guarded transitions). Frontend is React + TypeScript (Vite + PrimeReact)
+either way; Cratis slices additionally get **full-stack type safety** via TypeScript proxy generation
+on `dotnet build` — EF/CRUD slices do not, since there's no Cratis command/query pipeline to generate
+proxies from.
+
+**Which stack a slice uses is decided during board modeling, per slice** (see the event model board,
+not this file) — don't default a slice to Cratis just because the scaffold has it installed. If a
+slice on the board has no meaningful state-transition/audit-trail requirement, it's CRUD: an EF Core
+entity + `DbContext`, a controller or minimal-API endpoint, Postgres as the store. Only reach for
+`/build-state-change` / `/build-state-view` / `/build-automation` (the Cratis skills below) when the
+slice is event-sourced; a plain CRUD slice doesn't have commands/events/reactors in the Cratis sense
+and shouldn't be forced into that shape.
 
 Build slices with the kit's skills — `/build-state-change`, `/build-state-view`, `/build-automation` —
 and follow the conventions distilled in

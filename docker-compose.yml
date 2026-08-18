@@ -11,6 +11,17 @@ services:
       - 30000:30000
       - 35000:35000
 
+  postgres:
+    image: postgres:16
+    environment:
+      - POSTGRES_USER=expensetracker
+      - POSTGRES_PASSWORD=expensetracker
+      - POSTGRES_DB=expensetracker
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
   aspire-dashboard:
     image: mcr.microsoft.com/dotnet/aspire-dashboard:latest
     environment:
@@ -21,3 +32,6 @@ services:
     ports:
       - 18888:18888
       - 4317:18889
+
+volumes:
+  postgres-data:
