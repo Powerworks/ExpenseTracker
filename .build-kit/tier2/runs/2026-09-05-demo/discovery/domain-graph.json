@@ -1,0 +1,74 @@
+{
+  "runId": "2026-09-05-demo",
+  "generatedAt": "2026-09-05T00:00:00Z",
+  "slices": [
+    {
+      "id": "SomeModule.SomeFeature.Registration",
+      "sourceFile": "SomeModule/SomeFeature/Registration/Registration.cs",
+      "module": "SomeModule",
+      "feature": "SomeFeature",
+      "slice": "Registration",
+      "commands": ["Register"],
+      "events": ["Registered"],
+      "readModels": [],
+      "reactors": ["RegistrationReactor"],
+      "uiComponent": "SomeModule/SomeFeature/Registration/RegisterDialog.tsx"
+    },
+    {
+      "id": "SomeModule.SomeFeature.Listing",
+      "sourceFile": "SomeModule/SomeFeature/Listing/Listing.cs",
+      "module": "SomeModule",
+      "feature": "SomeFeature",
+      "slice": "Listing",
+      "commands": [],
+      "events": [],
+      "readModels": ["Listing"],
+      "reactors": [],
+      "uiComponent": "SomeModule/SomeFeature/Listing/ListingDataTable.tsx"
+    }
+  ],
+  "commands": [
+    {
+      "id": "Register",
+      "sliceId": "SomeModule.SomeFeature.Registration",
+      "fields": [
+        { "name": "Name", "type": "SomeName", "conceptOf": "string" }
+      ],
+      "handleReturns": ["Registered"],
+      "handleReturnShape": "tuple",
+      "hasValidator": false,
+      "dcbReadModelParams": []
+    }
+  ],
+  "events": [
+    {
+      "id": "Registered",
+      "sliceId": "SomeModule.SomeFeature.Registration",
+      "fields": [
+        { "name": "Name", "type": "SomeName" }
+      ]
+    }
+  ],
+  "readModels": [
+    {
+      "id": "Listing",
+      "sliceId": "SomeModule.SomeFeature.Listing",
+      "queryMethods": ["AllListings"],
+      "projectedFrom": ["Registered"]
+    }
+  ],
+  "edges": [
+    {
+      "from": "Registered",
+      "to": null,
+      "action": "react",
+      "trigger": "RegistrationReactor.Handle"
+    }
+  ],
+  "warnings": [
+    {
+      "file": "SomeModule/SomeFeature/Registration/Registration.cs",
+      "reason": "RegistrationReactor.Handle has no EventContext parameter (signature is Handle(Registered evt) only) — cratis-conventions.md's documented reactor signature is Handle(TEvent @event, EventContext context). Not necessarily a bug (Cratis may resolve this via DI/optional param), but flagged since it deviates from the shared convention doc's shape and this skill's extraction rule assumed the two-parameter form."
+    }
+  ]
+}

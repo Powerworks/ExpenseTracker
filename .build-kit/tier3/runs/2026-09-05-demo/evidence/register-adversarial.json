@@ -1,0 +1,116 @@
+{
+  "empty_name": {
+    "httpStatus": 200,
+    "response": {
+      "response": "4473ec98-a4e8-402a-acfd-049afbd19fd3",
+      "correlationId": "62b960f5-1ff6-48fb-881f-14861e7bd488",
+      "isSuccess": true,
+      "isAuthorized": true,
+      "isValid": true,
+      "hasExceptions": false,
+      "validationResults": [],
+      "exceptionMessages": [],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  },
+  "whitespace_only": {
+    "httpStatus": 200,
+    "response": {
+      "response": "7cbf1f5f-0283-4c72-9802-8ec9265e467c",
+      "correlationId": "823615ad-cd94-46e4-ad95-b349ed719e69",
+      "isSuccess": true,
+      "isAuthorized": true,
+      "isValid": true,
+      "hasExceptions": false,
+      "validationResults": [],
+      "exceptionMessages": [],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  },
+  "very_long_name_10000": {
+    "httpStatus": 200,
+    "response": {
+      "response": "ced61f0a-dca0-4c67-a827-bc578336f59c",
+      "correlationId": "f66187e2-555f-4212-849b-9ef829232e96",
+      "isSuccess": true,
+      "isAuthorized": true,
+      "isValid": true,
+      "hasExceptions": false,
+      "validationResults": [],
+      "exceptionMessages": [],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  },
+  "script_injection": {
+    "httpStatus": 200,
+    "response": {
+      "response": "535683a9-ff07-411b-bbe5-f9ecc022043c",
+      "correlationId": "fc5013c0-2243-4770-ac48-8c4a80bbb8f0",
+      "isSuccess": true,
+      "isAuthorized": true,
+      "isValid": true,
+      "hasExceptions": false,
+      "validationResults": [],
+      "exceptionMessages": [],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  },
+  "sql_injection_shape": {
+    "httpStatus": 200,
+    "response": {
+      "response": "562846b3-04d4-46db-a017-e242899968fb",
+      "correlationId": "dbdceae1-891a-4950-b171-83727d2e4c69",
+      "isSuccess": true,
+      "isAuthorized": true,
+      "isValid": true,
+      "hasExceptions": false,
+      "validationResults": [],
+      "exceptionMessages": [],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  },
+  "missing_field": {
+    "httpStatus": 400,
+    "response": {
+      "correlationId": "1e6491c2-a39a-4d64-bc61-34c19f6270a3",
+      "isSuccess": false,
+      "isAuthorized": true,
+      "isValid": false,
+      "hasExceptions": false,
+      "validationResults": [
+        {
+          "severity": 3,
+          "message": "The value is required.",
+          "members": [
+            "Name"
+          ],
+          "reason": "rule"
+        }
+      ],
+      "exceptionMessages": [],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  },
+  "wrong_type": {
+    "httpStatus": 500,
+    "response": {
+      "correlationId": "81395443-a5c9-4643-a76a-c825f9024072",
+      "isSuccess": false,
+      "isAuthorized": true,
+      "isValid": true,
+      "hasExceptions": true,
+      "validationResults": [],
+      "exceptionMessages": [
+        "An internal error occurred while processing the request. See server logs for details."
+      ],
+      "exceptionStackTrace": "",
+      "authorizationFailureReason": ""
+    }
+  }
+}

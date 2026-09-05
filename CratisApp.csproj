@@ -16,6 +16,10 @@
     <ItemGroup>
         <Content Remove="package.json" />
         <None Remove="package.json" />
+        <!-- CratisApp.Specs lives under this project's own directory; without this,
+             CratisApp.csproj's default glob double-compiles the xUnit spec files into
+             the main app assembly (found during tier-0/1 spike wiring, 2026-09-05). -->
+        <Compile Remove="CratisApp.Specs/**/*.cs" />
     </ItemGroup>
 
     <ItemGroup>

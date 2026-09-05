@@ -1,0 +1,26 @@
+{
+  "runId": "2026-09-05-demo",
+  "executedAt": "2026-09-05T15:27:35.113226+00:00",
+  "cases": [
+    {
+      "caseId": "register-happy-path",
+      "status": "pass",
+      "evidence": "evidence/register-happy-path.json"
+    },
+    {
+      "caseId": "listing-reflects-registration",
+      "status": "pass",
+      "evidence": "evidence/listing-reflects-registration.json"
+    },
+    {
+      "caseId": "register-reactor-logs",
+      "status": "skipped",
+      "reason": "reactor side-effect is a log line only (RegistrationReactor calls no command); this harness has no log-assertion mechanism yet \u2014 see the case spec's note."
+    }
+  ],
+  "summary": {
+    "pass": 2,
+    "fail": 0,
+    "skipped": 1
+  }
+}

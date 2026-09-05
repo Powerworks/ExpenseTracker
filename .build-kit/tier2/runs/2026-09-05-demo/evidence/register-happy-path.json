@@ -1,0 +1,50 @@
+{
+  "commandResponse": {
+    "response": "3179d525-c521-48da-b675-89ba8dd92ab6",
+    "correlationId": "ca2fdc28-1d1e-42f7-a09e-11436dff524a",
+    "isSuccess": true,
+    "isAuthorized": true,
+    "isValid": true,
+    "hasExceptions": false,
+    "validationResults": [],
+    "exceptionMessages": [],
+    "exceptionStackTrace": "",
+    "authorizationFailureReason": ""
+  },
+  "witnessEventLogDoc": {
+    "_id": "1",
+    "correlationId": "b'\\xca/\\xdc(\\x1d\\x1eB\\xf7\\xa0\\x9e\\x11Cm\\xffRJ'",
+    "causation": [
+      {
+        "occurred": "2026-09-05 15:27:34.804000",
+        "type": "Command",
+        "properties": {
+          "commandType": "Register",
+          "commandTypeFullName": "CratisApp.SomeModule.SomeFeature.Registration.Register",
+          "name": "Tier2 Witness a538693c",
+          "eventSequenceId": "event-log"
+        }
+      }
+    ],
+    "causedBy": [
+      "b'\\xb6\\x01\\x9a\\xf9T\\x1dN\\x0b\\xb8\\xcb>8\\x00w\\x1d\\x89'"
+    ],
+    "type": "Registered",
+    "occurred": "2026-09-05 15:27:34.829000",
+    "eventSourceType": "Default",
+    "eventSourceId": "ec0c7ac5-277d-4b57-a56e-e31d6abf4e67",
+    "eventStreamType": "All",
+    "eventStreamId": "Default",
+    "tags": [],
+    "content": {
+      "1": {
+        "name": "Tier2 Witness a538693c"
+      }
+    },
+    "contentHashes": {
+      "1": "wVEuMntykOOVojFxfIRQc4RSaztNX/cy6NbV3U/oGsA="
+    },
+    "revisions": [],
+    "subject": null
+  }
+}

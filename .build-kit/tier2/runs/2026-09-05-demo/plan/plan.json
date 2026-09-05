@@ -1,0 +1,33 @@
+{
+  "runId": "2026-09-05-demo",
+  "generatedAt": "2026-09-05T00:00:00Z",
+  "cases": [
+    {
+      "id": "register-happy-path",
+      "name": "Register succeeds and appends Registered",
+      "type": "functional",
+      "priority": "p0",
+      "relatedSliceIds": ["SomeModule.SomeFeature.Registration"],
+      "markdownPath": "specs/register-happy-path.md",
+      "requiresLogin": false
+    },
+    {
+      "id": "register-reactor-logs",
+      "name": "RegistrationReactor observes Registered",
+      "type": "functional",
+      "priority": "p1",
+      "relatedSliceIds": ["SomeModule.SomeFeature.Registration"],
+      "markdownPath": "specs/register-reactor-logs.md",
+      "requiresLogin": false
+    },
+    {
+      "id": "listing-reflects-registration",
+      "name": "Listing read model reflects a new registration",
+      "type": "functional",
+      "priority": "p0",
+      "relatedSliceIds": ["SomeModule.SomeFeature.Registration", "SomeModule.SomeFeature.Listing"],
+      "markdownPath": "specs/listing-reflects-registration.md",
+      "requiresLogin": false
+    }
+  ]
+}

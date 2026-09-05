@@ -1,0 +1,78 @@
+{
+  "threshold_at_threshold_100_00": {
+    "amount": 100.0,
+    "submitOk": true,
+    "autoApproved": false,
+    "reason": null
+  },
+  "threshold_just_under_99_99": {
+    "amount": 99.99,
+    "submitOk": true,
+    "autoApproved": false,
+    "reason": null
+  },
+  "threshold_just_over_100_01": {
+    "amount": 100.01,
+    "submitOk": true,
+    "autoApproved": false,
+    "reason": null
+  },
+  "amount_negative_50": {
+    "httpStatus": 400,
+    "submitOk": false,
+    "validationResults": [
+      {
+        "severity": 3,
+        "message": "Amount must be greater than zero",
+        "members": [
+          "amount"
+        ],
+        "reason": "rule"
+      }
+    ],
+    "eventActuallyAppended": false
+  },
+  "amount_zero": {
+    "httpStatus": 400,
+    "submitOk": false,
+    "validationResults": [
+      {
+        "severity": 3,
+        "message": "Amount must be greater than zero",
+        "members": [
+          "amount"
+        ],
+        "reason": "rule"
+      }
+    ],
+    "eventActuallyAppended": false
+  },
+  "concurrent_approval_race": {
+    "callResults": [
+      {
+        "status": 200,
+        "isSuccess": true,
+        "exceptionMessages": []
+      },
+      {
+        "status": 200,
+        "isSuccess": true,
+        "exceptionMessages": []
+      }
+    ],
+    "approvedEventCount": 0,
+    "PASS_exactly_one_event": false
+  },
+  "sequential_double_approve": {
+    "first": {
+      "status": 200,
+      "isSuccess": true
+    },
+    "second": {
+      "status": 200,
+      "isSuccess": true,
+      "exceptionMessages": []
+    },
+    "PASS_second_rejected": false
+  }
+}
