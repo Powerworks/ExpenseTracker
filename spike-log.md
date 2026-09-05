@@ -627,6 +627,68 @@ blocking access to the OS keyring where `gh` actually stores the token (login us
 a plain credentials file); the same `gh auth status` call succeeded immediately once run with the
 sandbox disabled. Worth remembering for any future `gh`-dependent step in this or other spikes.
 
+## Step 8 — Orca worktree gating follow-up (2026-09-06)
+
+The report's own recommendation: the one thing this whole spike never actually tested was gating an
+agent's diff **through a live Orca-managed worktree**, end to end. Every prior step drove `agy`
+directly. This step does the real thing.
+
+**Setup**: the leftover `orca serve` process from step 2 (never actually killed — `pkill -f "orca
+serve"` missed it because the running process is titled `orca-ide --serve` under the AppImage mount,
+not `orca serve`) turned out to still be alive and healthy days later, with `ExpenseTracker` already
+registered as a repo from that same step. No restart needed.
+
+**Created a real worktree with a real agent**: `orca worktree create --repo id:... --name
+orca-gate-test --agent claude --prompt "<small, safe task>"` — asked it to fix the recurring
+`Microsoft.NET.StringTools`/net9.0 build warning this whole spike has seen in every `dotnet build`
+output, by adding `<SuppressTfmSupportBuildWarnings>true</SuppressTfmSupportBuildWarnings>` to
+`CratisApp.csproj`. Chose a trivial, safe, verifiable task deliberately — the point was testing the
+gating *mechanism*, not building a feature.
+
+**Real finding, immediately**: the agent's terminal came up and sat at Claude Code's own first-run
+trust prompt (`❯ No, exit` selected by default), then a second prompt approving the repo's `.mcp.json`
+MCP server — both genuinely interactive, both would silently stall an unattended pipeline. Sending
+navigation keystrokes to a terminal driving another agent got auto-blocked by Claude Code's own
+auto-mode classifier as too opaque an action to wave through unilaterally (a correct call) — stopped
+and asked the user, who authorized it for this one worktree terminal. Sent arrow-up + enter to accept
+the trust prompt, then enter to accept the MCP prompt's own safe default ("continue without using this
+MCP server"). This alone is a real, on-topic result: **an Orca-driven Claude Code agent is not
+unattended by default** — first-run trust and per-project MCP approval both need a human (or a
+pre-seeded config) in the loop, at least once per fresh workspace.
+
+Once past both prompts, the agent did the task correctly and quickly (~30s): read the file, made the
+one-line edit, ran the build itself, confirmed 0 warnings/0 errors, stopped. Exactly right.
+
+**The actual test — gating the resulting diff**:
+1. `orca terminal create --worktree <the new worktree> --command "... bash .build-kit/hooks/tier01-gate.sh; echo GATE_EXIT_CODE=$?"`, then `orca terminal wait --for exit` — **timed out**. Real finding:
+   `--for exit` waits for the **terminal's shell process** to exit, not for a command run inside a
+   persistent interactive shell to finish — the gate script completed successfully (visible via
+   `terminal read`, `GATE_EXIT_CODE=0` printed) but the shell itself stayed open at its prompt
+   afterward, so nothing ever "exited."
+2. Fixed by appending `; exit $?` to the command instead of just letting it print the code — re-ran,
+   `terminal wait --for exit` returned cleanly: `{"status": "exited", "exitCode": 0}`.
+3. Verified the failure path isn't just assumed symmetric: a throwaway `exit 1` terminal in the same
+   worktree returned `{"status": "exited", "exitCode": 1}` through the identical wait call.
+
+**This is the proof the spike was missing.** The exact pattern `CONSTITUTION.md` (step 2) and
+`spike-log.md` (steps 4, 6) proposed as the answer to "Orca has no native post-build hook" —
+external orchestration via `terminal create` + `terminal wait --for exit`, reading the exit code as
+the gate signal — genuinely works, real repo, real agent, real diff, real pass and real fail both
+confirmed. The one correction to carry forward: **always end the gated command with `exit $?`**, never
+rely on the command's own exit code propagating through an interactive shell on its own.
+
+**Left in place, not cleaned up**: the worktree at
+`~/orca/workspaces/ExpenseTracker/orca-gate-test` (branch `Powerworks/orca-gate-test`) still holds the
+real, uncommitted `CratisApp.csproj` fix — a genuinely useful small change, left for deliberate
+review/merge/discard rather than committed or discarded unilaterally as a side effect of this test.
+
+**Running view on Orca's suitability, final update**: upgraded from "promising, not yet provable" to
+**provable, with two concrete caveats now on record** — (1) first-run trust/MCP prompts need handling
+before any of this can run truly unattended (a one-time per-workspace setup cost, not a per-run one),
+and (2) the exit-code-gating pattern needs the `exit $?` discipline called out above. Neither is a
+blocker; both are exactly the kind of finding a spike like this exists to produce before AgentOS
+commits real infrastructure to the pattern.
+
 ## Step 7 — Report findings (2026-09-05)
 
 Published a synthesized report, not just this raw log: **https://claude.ai/code/artifact/8d06eccd-8a59-4167-b71c-eeb84a297429**
