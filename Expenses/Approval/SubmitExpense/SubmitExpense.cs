@@ -10,9 +10,9 @@ using Microsoft.Extensions.Configuration;
 [Command]
 public record SubmitExpense(decimal Amount, string Description)
 {
-    public (Guid, ExpenseSubmitted) Handle()
+    public (ExpenseId, ExpenseSubmitted) Handle()
     {
-        var eventSourceId = Guid.NewGuid();
+        var eventSourceId = ExpenseId.New();
 
         return (eventSourceId, new(Amount, Description));
     }
